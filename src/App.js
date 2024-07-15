@@ -3,7 +3,7 @@ import RecetteList from './components/RecetteList';
 import RecetteForm from './components/RecetteForm';
 import IngredientList from './components/IngredientList';
 import IngredientForm from './components/IngredientForm';
-import { getIngredients } from './services/api'; // Import the getIngredients function
+import { getIngredients } from './services/api';
 import './App.css';
 
 const App = () => {
@@ -67,31 +67,38 @@ const App = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Gestion de Recettes</h1>
-      <RecetteList selectRecette={selectRecette} recettes={recettes} setRecettes={setRecettes} />
-      <RecetteForm
-        selectedRecette={selectedRecette}
-        clearSelection={clearRecetteSelection}
-        onRecetteAdded={handleRecetteAdded}
-        onRecetteUpdated={handleRecetteUpdated}
-      />
-      {selectedRecette && (
-        <>
-          <IngredientList
-            recetteId={selectedRecette.id}
-            ingredients={ingredients}
-            selectIngredient={selectIngredient}
-            fetchIngredients={fetchIngredients} // Pass the fetchIngredients function
+    <div>
+      <header>Gestion de Recettes</header>
+      <div className="container">
+        <RecetteList selectRecette={selectRecette} recettes={recettes} setRecettes={setRecettes} />
+        <div className="recette-form">
+          <RecetteForm
+            selectedRecette={selectedRecette}
+            clearSelection={clearRecetteSelection}
+            onRecetteAdded={handleRecetteAdded}
+            onRecetteUpdated={handleRecetteUpdated}
           />
-          <IngredientForm
-            recetteId={selectedRecette.id}
-            selectedIngredient={selectedIngredient}
-            clearIngredientSelection={clearIngredientSelection}
-            onIngredientAddedOrUpdated={handleIngredientAddedOrUpdated}
-          />
-        </>
-      )}
+        </div>
+        {selectedRecette && (
+          <div className="ingredient-section">
+            <h2>Ingredients for {selectedRecette.titre}</h2>
+            <IngredientList
+              recetteId={selectedRecette.id}
+              ingredients={ingredients}
+              selectIngredient={selectIngredient}
+              fetchIngredients={fetchIngredients}
+            />
+            <div className="ingredient-form">
+              <IngredientForm
+                recetteId={selectedRecette.id}
+                selectedIngredient={selectedIngredient}
+                clearIngredientSelection={clearIngredientSelection}
+                onIngredientAddedOrUpdated={handleIngredientAddedOrUpdated}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

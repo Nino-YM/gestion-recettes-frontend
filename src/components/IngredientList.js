@@ -1,36 +1,43 @@
 import React, { useEffect } from 'react';
 import { deleteIngredient } from '../services/api';
+import './RecetteList.css'; // Assuming RecetteList.css styles can be shared
 
 const IngredientList = ({ recetteId, ingredients, selectIngredient, fetchIngredients }) => {
     useEffect(() => {
         fetchIngredients(recetteId);
-    }, [recetteId]); // Ensure fetchIngredients is not included in the dependency array
+    }, [recetteId]);
 
     const handleDelete = async (ingredientId) => {
         try {
             await deleteIngredient(ingredientId);
-            fetchIngredients(recetteId); // Update the ingredients list after deletion
+            fetchIngredients(recetteId);
         } catch (error) {
             console.error("Failed to delete ingredient:", error);
         }
     };
 
+    const handleCardClick = (ingredient) => {
+        selectIngredient(ingredient);
+    };
+
     return (
-        <div>
+        <div className="ingredient-list">
             <h2>Ingredients</h2>
-            <ul>
+            <div className="card-container">
                 {ingredients.length > 0 ? (
                     ingredients.map((ingredient) => (
-                        <li key={ingredient.id}>
-                            {ingredient.nom}
-                            <button onClick={() => selectIngredient(ingredient)}>Edit</button>
-                            <button onClick={() => handleDelete(ingredient.id)}>Delete</button>
-                        </li>
+                        <div key={ingredient.id} className="card" onClick={() => handleCardClick(ingredient)}>
+                            <h3>{ingredient.nom}</h3>
+                            <div className="card-buttons">
+                                <button onClick={(e) => { e.stopPropagation(); selectIngredient(ingredient); }}>Edit</button>
+                                <button onClick={(e) => { e.stopPropagation(); handleDelete(ingredient.id); }}>Delete</button>
+                            </div>
+                        </div>
                     ))
                 ) : (
-                    <li>No ingredients found.</li>
+                    <p>No ingredients found.</p>
                 )}
-            </ul>
+            </div>
         </div>
     );
 };

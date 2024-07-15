@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { getRecettes, deleteRecette } from '../services/api';
+import './RecetteList.css';
 
 const RecetteList = ({ selectRecette, recettes, setRecettes }) => {
     useEffect(() => {
@@ -25,18 +26,25 @@ const RecetteList = ({ selectRecette, recettes, setRecettes }) => {
         }
     };
 
+    const handleCardClick = (recette) => {
+        selectRecette(recette);
+    };
+
     return (
-        <div>
+        <div className="recette-list">
             <h2>Recettes</h2>
-            <ul>
+            <div className="card-container">
                 {recettes.map((recette) => (
-                    <li key={recette.id}>
-                        {recette.titre}
-                        <button onClick={() => selectRecette(recette)}>Edit</button>
-                        <button onClick={() => handleDelete(recette.id)}>Delete</button>
-                    </li>
+                    <div key={recette.id} className="card" onClick={() => handleCardClick(recette)}>
+                        <h3>{recette.titre}</h3>
+                        <p>{recette.description}</p>
+                        <div className="card-buttons">
+                            <button onClick={(e) => { e.stopPropagation(); selectRecette(recette); }}>Edit</button>
+                            <button onClick={(e) => { e.stopPropagation(); handleDelete(recette.id); }}>Delete</button>
+                        </div>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };
