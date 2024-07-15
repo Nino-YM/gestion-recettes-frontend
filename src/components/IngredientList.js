@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { deleteIngredient } from '../services/api';
-import './RecetteList.css'; // Assuming RecetteList.css styles can be shared
+import './RecetteList.css';
 
 const IngredientList = ({ recetteId, ingredients, selectIngredient, fetchIngredients }) => {
     useEffect(() => {
