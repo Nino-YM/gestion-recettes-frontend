@@ -4,7 +4,7 @@ import { deleteIngredient } from '../services/api';
 const IngredientList = ({ recetteId, ingredients, selectIngredient, fetchIngredients }) => {
     useEffect(() => {
         fetchIngredients(recetteId);
-    }, [recetteId, fetchIngredients]);
+    }, [recetteId]); // Ensure fetchIngredients is not included in the dependency array
 
     const handleDelete = async (ingredientId) => {
         try {
