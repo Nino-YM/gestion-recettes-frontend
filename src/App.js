@@ -1,25 +1,41 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import RecetteList from './components/RecetteList';
+import RecetteForm from './components/RecetteForm';
+import IngredientList from './components/IngredientList';
+import IngredientForm from './components/IngredientForm';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [selectedRecette, setSelectedRecette] = useState(null);
+  const [selectedIngredient, setSelectedIngredient] = useState(null);
+
+  const selectRecette = (recette) => {
+    setSelectedRecette(recette);
+    setSelectedIngredient(null);
+  };
+
+  const selectIngredient = (ingredient) => {
+    setSelectedIngredient(ingredient);
+  };
+
+  const clearSelection = () => {
+    setSelectedRecette(null);
+    setSelectedIngredient(null);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <h1>Gestion de Recettes</h1>
+      <RecetteList selectRecette={selectRecette} />
+      <RecetteForm selectedRecette={selectedRecette} clearSelection={clearSelection} />
+      {selectedRecette && (
+        <>
+          <IngredientList recetteId={selectedRecette.id} selectIngredient={selectIngredient} />
+          <IngredientForm recetteId={selectedRecette.id} selectedIngredient={selectedIngredient} clearSelection={clearSelection} />
+        </>
+      )}
     </div>
   );
-}
+};
 
 export default App;
