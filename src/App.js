@@ -8,6 +8,7 @@ import './App.css';
 const App = () => {
   const [selectedRecette, setSelectedRecette] = useState(null);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
+  const [recettes, setRecettes] = useState([]);
 
   const selectRecette = (recette) => {
     setSelectedRecette(recette);
@@ -23,11 +24,28 @@ const App = () => {
     setSelectedIngredient(null);
   };
 
+  const handleRecetteAdded = (newRecette) => {
+    setRecettes((prevRecettes) => [...prevRecettes, newRecette]);
+  };
+
+  const handleRecetteUpdated = (updatedRecette) => {
+    setRecettes((prevRecettes) =>
+      prevRecettes.map((recette) =>
+        recette.id === updatedRecette.id ? updatedRecette : recette
+      )
+    );
+  };
+
   return (
     <div className="container">
       <h1>Gestion de Recettes</h1>
-      <RecetteList selectRecette={selectRecette} />
-      <RecetteForm selectedRecette={selectedRecette} clearSelection={clearSelection} />
+      <RecetteList selectRecette={selectRecette} recettes={recettes} setRecettes={setRecettes} />
+      <RecetteForm
+        selectedRecette={selectedRecette}
+        clearSelection={clearSelection}
+        onRecetteAdded={handleRecetteAdded}
+        onRecetteUpdated={handleRecetteUpdated}
+      />
       {selectedRecette && (
         <>
           <IngredientList recetteId={selectedRecette.id} selectIngredient={selectIngredient} />

@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { getRecettes, deleteRecette } from '../services/api';
 
-const RecetteList = ({ selectRecette }) => {
-    const [recettes, setRecettes] = useState([]);
-
+const RecetteList = ({ selectRecette, recettes, setRecettes }) => {
     useEffect(() => {
         fetchRecettes();
     }, []);
@@ -21,7 +19,7 @@ const RecetteList = ({ selectRecette }) => {
     const handleDelete = async (id) => {
         try {
             await deleteRecette(id);
-            fetchRecettes();
+            setRecettes((prevRecettes) => prevRecettes.filter(recette => recette.id !== id));
         } catch (error) {
             console.error("Failed to delete recette:", error);
         }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { addRecette, updateRecette } from '../services/api';
 
-const RecetteForm = ({ selectedRecette, clearSelection }) => {
+const RecetteForm = ({ selectedRecette, clearSelection, onRecetteAdded, onRecetteUpdated }) => {
     const [titre, setTitre] = useState('');
     const [description, setDescription] = useState('');
 
@@ -19,9 +19,11 @@ const RecetteForm = ({ selectedRecette, clearSelection }) => {
         e.preventDefault();
         try {
             if (selectedRecette) {
-                await updateRecette(selectedRecette.id, { titre, description });
+                const response = await updateRecette(selectedRecette.id, { titre, description });
+                onRecetteUpdated(response.data);
             } else {
-                await addRecette({ titre, description });
+                const response = await addRecette({ titre, description });
+                onRecetteAdded(response.data);
             }
             clearSelection();
         } catch (error) {
