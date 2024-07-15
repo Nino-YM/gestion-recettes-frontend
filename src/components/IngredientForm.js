@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { addIngredient, updateIngredient } from '../services/api';
 
-const IngredientForm = ({ recetteId, selectedIngredient, clearSelection }) => {
+const IngredientForm = ({ recetteId, selectedIngredient, clearIngredientSelection, onIngredientAddedOrUpdated }) => {
     const [nom, setNom] = useState('');
 
     useEffect(() => {
@@ -16,13 +16,13 @@ const IngredientForm = ({ recetteId, selectedIngredient, clearSelection }) => {
         e.preventDefault();
         try {
             if (selectedIngredient) {
-                console.log(`Updating ingredient: ${selectedIngredient.id}, ${nom}`);
-                await updateIngredient(selectedIngredient.id, { recette_id: recetteId, nom });
+                const response = await updateIngredient(selectedIngredient.id, { nom, recette_id: recetteId });
+                onIngredientAddedOrUpdated(response.data);
             } else {
-                console.log(`Adding ingredient: ${recetteId}, ${nom}`);
-                await addIngredient({ recette_id: recetteId, nom }); // Updated
+                const response = await addIngredient({ nom, recette_id: recetteId });
+                onIngredientAddedOrUpdated(response.data);
             }
-            clearSelection();
+            clearIngredientSelection();
         } catch (error) {
             console.error("Error saving ingredient:", error);
         }
@@ -36,7 +36,7 @@ const IngredientForm = ({ recetteId, selectedIngredient, clearSelection }) => {
                 <input type="text" value={nom} onChange={(e) => setNom(e.target.value)} required />
             </div>
             <button type="submit">Save</button>
-            <button type="button" onClick={clearSelection}>Cancel</button>
+            <button type="button" onClick={clearIngredientSelection}>Cancel</button>
         </form>
     );
 };

@@ -1,30 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { getIngredients, deleteIngredient } from '../services/api';
+import React, { useEffect } from 'react';
+import { deleteIngredient } from '../services/api';
 
-const IngredientList = ({ recetteId, selectIngredient }) => {
-    const [ingredients, setIngredients] = useState([]);
-
+const IngredientList = ({ recetteId, ingredients, selectIngredient, fetchIngredients }) => {
     useEffect(() => {
-        if (recetteId) {
-            fetchIngredients(recetteId);
-        }
-    }, [recetteId]);
-
-    const fetchIngredients = async (id) => {
-        try {
-            console.log(`Fetching ingredients for recette: ${id}`);
-            const response = await getIngredients(id);
-            console.log("Ingredients fetched: ", response.data);
-            setIngredients(response.data);
-        } catch (error) {
-            console.error("Failed to fetch ingredients:", error);
-        }
-    };
+        fetchIngredients(recetteId);
+    }, [recetteId, fetchIngredients]);
 
     const handleDelete = async (ingredientId) => {
         try {
             await deleteIngredient(ingredientId);
-            fetchIngredients(recetteId);
+            fetchIngredients(recetteId); // Update the ingredients list after deletion
         } catch (error) {
             console.error("Failed to delete ingredient:", error);
         }
